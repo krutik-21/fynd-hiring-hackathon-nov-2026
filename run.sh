@@ -8,7 +8,7 @@ set -euo pipefail
 
 PROJECT_NAME="dispatch-queue"
 CONTAINER_NAME="dispatch-queue-service"
-PORT=8000
+PORT="${PORT:-${1:-8000}}"
 AS_OF_TIME="2026-11-23T12:00:00Z"
 
 echo "================================================================================"

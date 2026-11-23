@@ -89,7 +89,7 @@ async def ingest_shipments_api(payload: Union[List[Dict[str, Any]], Dict[str, An
     summary="View quarantined records and rejection reasons"
 )
 async def list_quarantine(
-    feed_type: Optional[str] = Query(None, description="Filter by feed type: 'order' or 'shipment'"),
+    feed_type: Optional[str] = Query(None, pattern="^(order|shipment)$", description="Filter by feed type: 'order' or 'shipment'"),
     limit: int = Query(100, ge=1, le=1000)
 ):
     with get_db() as conn:

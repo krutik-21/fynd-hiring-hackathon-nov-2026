@@ -47,6 +47,10 @@ This document outlines key engineering decisions, trade-offs, and design rationa
 
 ## 4. Storage & Relational Modeling
 
+- **Order Table as Operational Snapshot (Not the Primary/Master Order Table)**:
+  - The local `orders` table in this service is treated strictly as an operational ingestion cache/snapshot rather than the source-of-truth master order table.
+  - The service prioritizes physical warehouse reality over order status: once a valid `DISPATCHED` shipment event occurs at or before `as_of`, the order is excluded from the action queue regardless of whatever status is stored in the `orders` table (e.g. `PENDING` or `PROCESSING`).
+  - Because upstream master systems or WMS event feeds may continue updating an order's lifecycle after dispatch without necessarily re-pushing full order snapshots to this triage service, the data in the local `orders` table eventually becomes stale and outdated.
 - **SQLite with Enforced Foreign Keys**:
   - Lightweight, embedded, zero-dependency relational database suitable for self-contained execution.
   - `PRAGMA foreign_keys = ON;` explicitly enforced on connections to safeguard referential integrity between orders and shipment events.
