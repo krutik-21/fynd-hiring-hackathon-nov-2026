@@ -1,0 +1,16 @@
+services:
+  dispatch-queue:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: dispatch-queue:latest
+    container_name: dispatch-queue-service
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PYTHONPATH=/app
+      - DATABASE_PATH=/app/dispatch_queue.db
+      - API_HOST=0.0.0.0
+      - API_PORT=8000
+    restart: unless-stopped
